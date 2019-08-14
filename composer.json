@@ -1,0 +1,27 @@
+{
+    "name": "onetoweb/transsmart",
+    "description": "Transsmart Client API v2",
+    "keywords": [
+        "api",
+        "php",
+        "transsmart"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/onetoweb/transsmart",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonathan van 't Ende",
+            "email": "jvantende@onetoweb.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Onetoweb\\Transsmart\\": "src/"
+        }
+    }
+}
