@@ -49,7 +49,7 @@ foreach($response as $shipment) {
     foreach($shipment['packageDocs'] as $packageDoc) {
         
         // write files to disk 
-        file_put_contents('/home/transsmart/temp/'.$shipment['reference'].'.'.$packageDoc['fileFormat'], base64_decode($packageDoc['data']));
+        file_put_contents($shipment['reference'].'.'.$packageDoc['fileFormat'], base64_decode($packageDoc['data']));
         
     }
 }
