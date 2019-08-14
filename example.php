@@ -8,7 +8,7 @@ $client = new Client('email@example.com', 'password', 'account', true);
 
 // example booking shipment
 $response = $client->bookShipment([[
-    'reference' => 'Shipment_'.time(),
+    'reference' => 'Shipment reference',
     'carrier' => 'DPD',
     'serviceLevelTime' => 'CLASSIC',
     'value' => 10,
