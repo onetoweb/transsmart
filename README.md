@@ -4,6 +4,7 @@
 
 ```bash
 composer require onetoweb/transsmart
+```
 
 ## Ussage
 
