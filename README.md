@@ -6,6 +6,6 @@
 composer require onetoweb/transsmart
 ```
 
-## Ussage
+## Usage
 
 See example.php
