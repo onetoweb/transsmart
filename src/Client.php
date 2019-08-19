@@ -223,12 +223,6 @@ class Client
                 
             }
             
-            dump([
-                'method' => $method,
-                'endpoint' => $endpoint,
-                'options' => $options,
-            ]);
-            
             $result = $client->request($method, $endpoint, $options);
             
             $contents = $result->getBody()->getContents();
