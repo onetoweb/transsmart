@@ -243,6 +243,22 @@ class Client
     }
     
     /**
+     * Build http query
+     * 
+     * @param array $parameters = []
+     * 
+     * @return string
+     */
+    private function buildQuery($parameters = [])
+    {
+        if(count($parameters) > 0) {
+            return '?'.http_build_query($parameters);
+        }
+        
+        return '';
+    }
+    
+    /**
      * Book shipment
      * 
      * @see https://devdocs.transsmart.com/#_2_1_shipment_booking
@@ -282,7 +298,7 @@ class Client
      */
     public function retrieveShipments($parameters = [])
     {
-        return $this->get("/v2/shipments/{$this->account}?".http_build_query($parameters));
+        return $this->get("/v2/shipments/{$this->account}".$this->buildQuery($parameters));
     }
     
     /**
@@ -310,7 +326,7 @@ class Client
      */
     public function getShipmentManifestList($parameters = [])
     {
-         return $this->get("/v2/shipments/{$this->account}/manifest/list?".http_build_query($parameters));
+         return $this->get("/v2/shipments/{$this->account}/manifest/list".$this->buildQuery($parameters));
     }
     
     /**
@@ -324,7 +340,7 @@ class Client
      */
     public function manifestShipments($parameters = [])
     {
-        return $this->get("/v2/shipments/{$this->account}/manifest?".http_build_query($parameters));
+        return $this->get("/v2/shipments/{$this->account}/manifest".$this->buildQuery($parameters));
     }
     
     /**
@@ -339,7 +355,7 @@ class Client
      */
     public function calculateRates($data, $parameters = [])
     {
-        return $this->post("/v2/rates/{$this->account}?".http_build_query($parameters), $data);
+        return $this->post("/v2/rates/{$this->account}".$this->buildQuery($parameters), $data);
     }
     
     /**
@@ -381,7 +397,7 @@ class Client
      */
     public function getShipmentsStatuses($parameters = [])
     {
-        return $this->get("/v2/statuses/{$this->account}/shipments?".http_build_query($parameters));
+        return $this->get("/v2/statuses/{$this->account}/shipments".$this->buildQuery($parameters));
     }
     
     /**
@@ -403,19 +419,13 @@ class Client
      * 
      * @see https://devdocs.transsmart.com/#_6_2b_retrieve_multiple_addresses
      * 
-     * @param int $page = 1 (optional)
-     * @param int $size = 20 (optional)
+     * @param array $parameters = []
      * 
      * @return array
      */
-    public function getAddresses($page = 1, $size = 20)
+    public function getAddresses($parameters = [])
     {
-        $parameters = [
-            'page' => $page,
-            'size' => $size,
-        ];
-        
-        return $this->get("/v2/addresses/{$this->account}?".http_build_query($parameters));
+        return $this->get("/v2/addresses/{$this->account}".$this->buildQuery($parameters));
     }
     
     /**
@@ -680,6 +690,6 @@ class Client
      */
     public function getPickupLocations($parameters = [])
     {
-        return $this->get("/v2/locations/{$this->account}?".http_build_query($parameters));
+        return $this->get("/v2/locations/{$this->account}".$this->buildQuery($parameters));
     }
 }
