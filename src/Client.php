@@ -124,7 +124,7 @@ class Client
             
             if ($requestException->hasResponse()) {
                 
-                $error = (string) $e->getResponse()->getBody()->getContents();
+                $error = (string) $requestException->getResponse()->getBody()->getContents();
                 
                 throw new LoginException($error);
             }
