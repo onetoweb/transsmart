@@ -199,7 +199,7 @@ class Client
      *
      * @return array
      */
-    private function request($method = 'GET', $endpoint, $data = null)
+    private function request($method, $endpoint, $data = null)
     {
         if ($this->getToken() == null or $this->getToken()->hasExpired()) {
             $this->login();
