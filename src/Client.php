@@ -191,7 +191,7 @@ class Client
     /**
      * Send request
      * 
-     * @param string $method = 'GET'
+     * @param string $method
      * @param string $endpoint
      * @param array $data = null (optional)
      *
