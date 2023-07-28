@@ -36,6 +36,11 @@ class Client
      * @var Token
      */
     private $token;
+
+    /**
+     * @var bool
+     */
+    private $testMode;
     
     /**
      * @var string
@@ -53,13 +58,13 @@ class Client
      * @param string $account
      * @param bool $testmode = false (optional)
      */
-    public function __construct($username, $password, $account, $testmode = false)
+    public function __construct($username, $password, $account, $testMode = false)
     {
         $this->username = $username;
         $this->password = $password;
         $this->account = $account;
         
-        $this->setTestMode($testmode);
+        $this->setTestMode($testMode);
     }
     
     /**
@@ -75,11 +80,11 @@ class Client
     /**
      * Set test mode
      * 
-     * @param bool $testmode = false (optional)
+     * @param bool $testMode = false (optional)
      */
-    public function setTestMode($testmode = false)
+    public function setTestMode($testMode = false)
     {
-        $this->testMode = $testmode;
+        $this->testMode = $testMode;
     }
     
     /**
