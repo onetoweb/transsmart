@@ -4,6 +4,7 @@ namespace Onetoweb\Transsmart;
 
 use Onetoweb\Transsmart\Exception\LoginException;
 use Onetoweb\Transsmart\Exception\RequestException;
+use Onetoweb\Transsmart\Config\{Method, ApiLocation};
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
@@ -18,48 +19,40 @@ use GuzzleHttp\Psr7\Response;
 class Client
 {
     /**
-     * @var string
-     */
-    private $username;
-    
-    /**
-     * @var string
-     */
-    private $password;
-    
-    /**
-     * @var string
-     */
-    private $account;
-    
-    /**
      * @var Token
      */
-    private $token;
+    private ?Token $token = null;
     
     /**
      * @var string
      */
-    private $apiLocation = 'https://api.transsmart.com';
+    private string $apiLocation = 'https://api.transsmart.com';
     
     /**
      * @var string
      */
-    private $apiTestLocation = 'https://accept-api.transsmart.com';
-        
+    private string $apiTestLocation = 'https://accept-api.transsmart.com';
+    
     /**
      * @param string $username
      * @param string $password
      * @param string $account
      * @param bool $testmode = false (optional)
      */
-    public function __construct($username, $password, $account, $testmode = false)
-    {
-        $this->username = $username;
-        $this->password = $password;
-        $this->account = $account;
+    public function __construct(
         
-        $this->setTestMode($testmode);
+        #[\SensitiveParameter]
+        private string $username,
+        
+        #[\SensitiveParameter]
+        private string $password,
+        
+        #[\SensitiveParameter]
+        private string $account,
+        
+        private bool $testMode = false
+    ) {
+        
     }
     
     /**
@@ -69,7 +62,7 @@ class Client
      */
     private function getApiLocation()
     {
-        return ($this->testMode ? $this->apiTestLocation : $this->apiLocation);
+        return ($this->testMode ? ApiLocation::TEST->value : ApiLocation::LIVE->value);
     }
     
     /**
@@ -118,17 +111,13 @@ class Client
                 'verify' => false
             ]);
             
-            $result = $client->request('GET', "{$this->getApiLocation()}/login");
+            $result = $client->request(Method::GET->value, "{$this->getApiLocation()}/login");
             
         } catch (GuzzleRequestException $requestException) {
             
-            if ($requestException->hasResponse()) {
-                
-                $error = (string) $requestException->getResponse()->getBody()->getContents();
-                
-                throw new LoginException($error);
-            }
+            $error = (string) $requestException->getResponse()->getBody()->getContents();
             
+            throw new LoginException($error);
         }
         
         $contents = json_decode($result->getBody()->getContents());
@@ -147,7 +136,7 @@ class Client
      */
     private function get($endpoint)
     {
-        return $this->request('GET', $endpoint);
+        return $this->request(Method::GET, $endpoint);
     }
     
     /**
@@ -160,7 +149,7 @@ class Client
      */
     private function post($endpoint, $data)
     {
-        return $this->request('POST', $endpoint, $data);
+        return $this->request(Method::POST, $endpoint, $data);
     }
     
     /**
@@ -173,7 +162,7 @@ class Client
      */
     private function put($endpoint, $data)
     {
-        return $this->request('PUT', $endpoint, $data);
+        return $this->request(Method::PUT, $endpoint, $data);
     }
     
     /**
@@ -185,13 +174,13 @@ class Client
      */
     private function delete($endpoint)
     {
-        return $this->request('DELETE', $endpoint);
+        return $this->request(Method::DELETE, $endpoint);
     }
     
     /**
      * Send request
      * 
-     * @param string $method
+     * @param Method $method
      * @param string $endpoint
      * @param array $data = null (optional)
      *
@@ -199,7 +188,7 @@ class Client
      *
      * @return array
      */
-    private function request($method, $endpoint, $data = null)
+    private function request(Method $method, $endpoint, $data = null)
     {
         if ($this->getToken() == null or $this->getToken()->hasExpired()) {
             $this->login();
@@ -217,26 +206,21 @@ class Client
                 ]
             ];
             
-            if(in_array($method, ['POST', 'PUT'])) {
+            if(in_array($method, [Method::POST, Method::PUT])) {
                 
                 $options[RequestOptions::JSON] = $data;
                 
             }
             
-            $result = $client->request($method, $endpoint, $options);
+            $result = $client->request($method->value, $endpoint, $options);
             
             $contents = $result->getBody()->getContents();
             
         } catch (GuzzleRequestException $requestException) {
             
-            if ($requestException->hasResponse()) {
-                
-                $error = (string) $requestException->getResponse()->getBody()->getContents();
-                
-                throw new RequestException($error);
-            }
+            $error = (string) $requestException->getResponse()->getBody()->getContents();
             
-            throw new RequestException($requestException->getMessage());
+            throw new RequestException($error);
         }
         
         return json_decode($contents, true);

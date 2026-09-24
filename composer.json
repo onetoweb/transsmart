@@ -16,8 +16,11 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
-        "guzzlehttp/guzzle": "^6.3 || ^7.0"
+        "php": ">=8.1",
+        "guzzlehttp/guzzle" : "^7.0 || ^8.0"
+    },
+    "require-dev": {
+        "symfony/error-handler": "^8.1"
     },
     "autoload": {
         "psr-4": {
